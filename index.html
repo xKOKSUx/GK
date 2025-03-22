@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Zad1</title>
+    <style>
+        #canvasholder {
+            border:2px solid black;
+            float: left; 
+        }
+    </style>
+    <script>
+        var canvas;
+        var graphics;
+        var pixelSize;                         
+        
+        function draw() {
+        
+            graphics.clearRect(0,0,600,600);
+                               
+            graphics.fillStyle   = "Blueviolet";
+            graphics.strokeStyle = "black";
+            graphics.lineWidth   = 3;
+
+        graphics.beginPath();
+        
+        graphics.moveTo(260, 130);  
+        graphics.lineTo(340, 130);  
+        graphics.lineTo(370, 180); 
+        graphics.lineTo(340, 230);  
+        graphics.lineTo(260, 230);  
+        graphics.lineTo(230, 180);  
+
+        graphics.closePath();
+        graphics.fill();
+        graphics.stroke();
+
+        drawEye(280, 165);
+        drawEye(320, 165);
+
+      
+        drawMouth(300, 195);
+                        
+        }
+        function drawEye(cx, cy) {
+      
+            graphics.beginPath();
+            graphics.fillStyle   = "white";
+            graphics.arc(cx, cy, 8, 0, 2*Math.PI);
+            graphics.fill();
+
+            graphics.beginPath();
+            graphics.fillStyle   = "black";
+            graphics.arc(cx, cy, 5, 0, 2*Math.PI);
+            graphics.fill();
+          
+            graphics.beginPath();
+            graphics.fillStyle   = "white";
+            graphics.arc(cx-2, cy-2, 2, 0, 2*Math.PI);
+            graphics.fill();
+    }
+    
+    function drawMouth(cx, cy) {
+      graphics.fillStyle = "black";
+      graphics.beginPath();
+
+     
+      graphics.moveTo(cx - 20, cy - 5);
+      graphics.bezierCurveTo(
+        cx - 2, cy + 2,  
+        cx + 2, cy + 2, 
+        cx + 20, cy - 5     
+      );
+
+      
+      graphics.bezierCurveTo(
+        cx + 10, cy + 15,
+        cx - 10, cy + 15,
+        cx - 20, cy - 5
+      );
+
+      graphics.closePath();
+      graphics.fill();
+
+     
+      graphics.fillStyle = "white";
+      graphics.fillRect(cx - 3, cy, 3, 4);
+      graphics.fillRect(cx +1 , cy , 3, 4);
+    }        
+        function addGraphicsContextExtras(graphics) {
+            graphics.strokeLine = function(x1,y1,x2,y2) {
+               this.beginPath();
+               this.moveTo(x1,y1);
+               this.lineTo(x2,y2);
+               this.stroke();
+            }
+            graphics.fillCircle = function(x,y,r) {
+               this.beginPath();
+               this.arc(x,y,r,0,2*Math.PI,false);
+               this.fill();
+            }
+            graphics.strokeCircle = function(x,y,radius) {
+               this.beginPath();
+               this.arc(x,y,radius,0,2*Math.PI,false);
+               this.stroke();
+            }
+            graphics.fillPoly = function() { 
+                if (arguments.length < 6)
+                   return;
+                this.beginPath();
+                this.moveTo(arguments[0],arguments[1]);
+                for (var i = 2; i+1 < arguments.length; i = i + 2) { 
+                   this.lineTo(arguments[i],arguments[i+1]);
+                }
+                this.closePath();
+                this.fill();
+            }
+            graphics.strokePoly = function() { 
+                if (arguments.length < 4)
+                   return;
+                this.beginPath();
+                this.moveTo(arguments[0],arguments[1]);
+                for (var i = 2; i+1 < arguments.length; i = i + 2) { 
+                   this.lineTo(arguments[i],arguments[i+1]);
+                }
+                this.closePath();
+                this.stroke();
+            }
+            graphics.fillOval = function(x,y,horizontalRadius,verticalRadius) {
+               this.save();
+               this.translate(x,y);
+               this.scale(horizontalRadius,verticalRadius);
+               this.beginPath();
+               this.arc(0,0,1,0,2*Math.PI,false);
+               this.restore();
+               this.fill();
+            }
+            graphics.strokeOval = function(x,y,horizontalRadius,verticalRadius) {
+               this.save();
+               this.translate(x,y);
+               this.scale(horizontalRadius,verticalRadius);
+               this.beginPath();
+               this.arc(0,0,1,0,2*Math.PI,false);
+               this.restore();
+               this.stroke();
+            }
+            graphics.getRGB = function(x,y) {
+                var color = this.getImageData(x,y,1,1);
+                return color.data;
+            }
+        }    
+        function init() {
+            
+            canvas = document.getElementById("canvas");
+            graphics = canvas.getContext("2d");
+            addGraphicsContextExtras(graphics);
+            draw();  
+        }
+        
+    </script>
+    </head>
+    <body onload="init()">
+    
+    <div id="canvasholder">
+    <canvas id="canvas" width="600" height="600">
+        
+    </canvas>
+    </div>
+    </body>
+    </html>
